@@ -37,7 +37,7 @@ jobs:
           echo "::set-output name=email::$(git log -n 1 --pretty=format:%ae)"
       - name: Edit ChangeLog
         run: |
-          python3 "${GITHUB_WORKSPACE}/.github/get-unreleased-changelog.py" ${{ steps.getversion.outputs.version }} ${{ steps.date.outputs.date }}
+          python3 "${GITHUB_WORKSPACE}/.github/update-changelog-on-release.py" ${{ steps.getversion.outputs.version }} ${{ steps.date.outputs.date }}
 #      - name: Edit last commit
 #        run: |
 #          # Configure git
