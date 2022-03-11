@@ -30,6 +30,27 @@ jobs:
           echo "CHANGELOG<<EOF" >> $GITHUB_ENV
           python3 "${GITHUB_WORKSPACE}/.github/get-unreleased-changelog.py" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
+      - name: Edit ChangeLog
+        run: |
+          python3 "${GITHUB_WORKSPACE}/.github/get-unreleased-changelog.py" ${{steps.getversion.outputs.version }} ${{ steps.date.outputs.date }}
+      - name: Edit last commit
+        run: |
+          # Configure git
+          git config user.name "$(git log -n 1 --pretty=format:%an)"
+          git config user.email "$(git log -n 1 --pretty=format:%ae)"
+          # Stash changes made to CHANGELOG
+          git stash
+          # Roll back git history to before last commit
+          # This also adds all changes in the last commit to the working tree
+          git reset --soft HEAD~1
+          # Apply stashed changed
+          git stash appy
+          # Add build files to working tree
+          git add CHANGELOG.md
+          # Commit changes and CHANGELOG files using same commit info as before
+          git commit -C HEAD@{1}
+          # Force push to overwrite git history
+          git push --force
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
