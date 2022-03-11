@@ -20,11 +20,13 @@ jobs:
       - name: Get current date
         id: date
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-#      - name: Create Tag
-#        uses: tvdias/github-tagger@v0.0.1
-#        with:
-#          repo-token: ${{ secrets.GITHUB_TOKEN }}
-#          tag: 'v${{ steps.getversion.outputs.version }}'
+      - name: Read ChangeLog
+        id: changelog
+        run: |
+          chmod +x "${GITHUB_WORKSPACE}/.github/get-unreleased-changelog.sh"
+          echo "CHANGELOG<<EOF" >> $GITHUB_ENV
+          "${GITHUB_WORKSPACE}/.github/get-unreleased-changelog.sh" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -35,7 +37,4 @@ jobs:
           release_name: Release ${{ steps.getversion.outputs.version }}
           draft: false
           prerelease: false
-#          body: |
-#            Changes in this Release
-#            - First Change
-#            - Second Change
+          body: ${{ env.CHANGELOG }}
