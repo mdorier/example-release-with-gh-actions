@@ -8,7 +8,7 @@ def update_changelog(filename, version, date):
         if line.startswith('## [Unreleased]'):
             new_content += line
             new_content += '\n### Added\n\n### Changed\n\n### Fixed\n\n'
-            new_content += '## [{version}] - {date}\n\n'
+            new_content += f'## [{version}] - {date}\n\n'
         else:
             new_content += line
     with open(filename, 'w+') as f:
