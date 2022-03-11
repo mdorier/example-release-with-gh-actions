@@ -12,6 +12,10 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     steps:
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Read version number
@@ -23,15 +27,14 @@ jobs:
       - name: Read ChangeLog
         id: changelog
         run: |
-          chmod +x "${GITHUB_WORKSPACE}/.github/get-unreleased-changelog.sh"
           echo "CHANGELOG<<EOF" >> $GITHUB_ENV
-          "${GITHUB_WORKSPACE}/.github/get-unreleased-changelog.sh" >> $GITHUB_ENV
+          "python3 ${GITHUB_WORKSPACE}/.github/get-unreleased-changelog.py" >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: 'v${{ steps.getversion.outputs.version }}'
           release_name: Release ${{ steps.getversion.outputs.version }}
