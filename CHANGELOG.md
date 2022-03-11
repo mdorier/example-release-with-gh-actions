@@ -15,16 +15,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.0.11] - 2022-03-11
 
-
-### Added
-
-### Changed
-
-### Fixed
-
-## [{version}] - {date}
-
-
 ### Added
 - Something added
 - Some other cool things
